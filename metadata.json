@@ -1,0 +1,6 @@
+{
+  "name": "Electro Solution",
+  "description": "Premium corporate electrical engineering and smart appliance maintenance services inspired by modern loft architecture and clean geometric layouts.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
