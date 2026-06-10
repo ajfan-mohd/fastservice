@@ -1,5 +1,5 @@
 import { Quote } from 'lucide-react';
-
+import ceoimg from '../assets/images/ceo.jpeg';
 export function CeoNote() {
   return (
     <section style={{ background: '#fff', padding: '80px 0' }}>
@@ -17,9 +17,9 @@ export function CeoNote() {
             }} />
             <div className="card" style={{ borderRadius: 24, overflow: 'hidden', position: 'relative' }}>
               <img
-                src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800"
+                src={ceoimg}
                 alt="CEO Fast Service"
-                style={{ width: '100%', height: 480, objectFit: 'cover', objectPosition: 'top' }}
+                style={{ width: '100%', height: 550, objectFit: 'cover', objectPosition: 'top' }}
               />
               {/* Name plate */}
               <div style={{
