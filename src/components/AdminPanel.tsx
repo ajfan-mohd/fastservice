@@ -57,9 +57,22 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   clients,
   onRefreshData,
 }) => {
-  const [activeTab, setActiveTab] = useState<
-    'bookings' | 'services' | 'gallery' | 'config' | 'testimonials' | 'clients'
-  >('bookings');
+ type AdminTab =
+  | 'bookings'
+  | 'services'
+  | 'gallery'
+  | 'config'
+  | 'testimonials'
+  | 'clients';
+
+const [activeTab, setActiveTabState] = useState<AdminTab>(() => {
+  return (localStorage.getItem('admin_active_tab') as AdminTab) || 'bookings';
+});
+
+const setActiveTab = (tab: AdminTab) => {
+  localStorage.setItem('admin_active_tab', tab);
+  setActiveTabState(tab);
+};
 
   const [editingServiceId, setEditingServiceId] = useState<string | null>(null);
   const [serviceTitle, setServiceTitle] = useState('');
