@@ -536,7 +536,14 @@ whatsappNumber: cfgWhatsapp,
                 <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
                   {clients.map((client) => (
                     <div key={client.id} className="border p-4 text-center">
-                      <img src={client.logo} alt={client.name} className="mx-auto h-16 object-contain" />
+                      <img
+  src={client.logo}
+  alt={client.name}
+  className="mx-auto h-16 max-w-full object-contain"
+  onError={(e) => {
+    e.currentTarget.style.display = 'none';
+  }}
+/>
                       <p className="mt-3 text-sm font-bold">{client.name}</p>
                       <button onClick={() => handleDeleteClient(client.id)} className="mt-3 w-full bg-red-600 py-1 text-xs text-white">
                         Delete
