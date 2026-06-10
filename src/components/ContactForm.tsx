@@ -1,12 +1,28 @@
 import { useState, useEffect } from 'react';
 import { Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import { Service, SiteConfig } from '../types';
-import { addBooking } from '../data';
+import { addBooking } from '../data.supabase';
 
 export function ContactForm({ siteConfig, services, prefilledServiceName, onBookingSubmitted }: { siteConfig: SiteConfig; services: Service[]; prefilledServiceName?: string | null; onBookingSubmitted:()=>void }) {
   const [form, setForm] = useState({ name: '', email: '', phone: '', serviceType: '', message: '' });
   useEffect(() => { if (prefilledServiceName) setForm(f => ({ ...f, serviceType: prefilledServiceName })); }, [prefilledServiceName]);
-  const submit = (e: any) => { e.preventDefault(); addBooking(form); setForm({ name: '', email: '', phone: '', serviceType: '', message: '' }); onBookingSubmitted(); alert('Request saved. The team can view it in Admin.'); };
+ const submit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  await addBooking(form);
+
+  setForm({
+    name: '',
+    email: '',
+    phone: '',
+    serviceType: '',
+    message: '',
+  });
+
+  await onBookingSubmitted();
+
+  alert('Request saved. The team can view it in Admin.');
+};
   const contactItems = [['Phone', siteConfig.phone, Phone], ['Email', siteConfig.email, Mail], ['Location', siteConfig.address, MapPin]];
 
   return (

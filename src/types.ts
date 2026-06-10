@@ -40,6 +40,12 @@ export interface SiteConfig {
   instagramUrl: string;
   aboutText: string;
   visionText: string;
+heroEyebrow: string;
+heroTitle: string;
+heroSubtitle: string;
+heroImage: string;
+whatsappNumber: string;
+
 }
 
 export interface Testimonial {
@@ -52,3 +58,8 @@ export interface Testimonial {
   serviceCategory: string;
 }
 
+export interface ClientLogo {
+  id: string;
+  name: string;
+  logo: string;
+}

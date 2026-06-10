@@ -1,5 +1,5 @@
 import { SiteConfig, Testimonial } from '../types';
-
+import { CeoNote } from '../components/CeoNote';
 export function AboutPage({
   siteConfig,
   testimonials,
@@ -43,7 +43,7 @@ export function AboutPage({
           />
         </div>
       </section>
-
+  <CeoNote /> 
       <section className="bg-white py-20 lg:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <p className="mb-5 text-sm font-black uppercase tracking-[0.24em] text-[#1E4ED8]">
