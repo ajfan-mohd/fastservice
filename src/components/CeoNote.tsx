@@ -28,10 +28,10 @@ export function CeoNote() {
                 background: 'linear-gradient(to top, rgba(10,22,40,.92) 0%, transparent 100%)',
               }}>
                 <div style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: '1.4rem', color: '#fff', letterSpacing: '-.02em' }}>
-                  Mohammed Al Rashidi
+                  Engr. Sulaiman Mohamed Al Sheezawy
                 </div>
                 <div style={{ fontSize: '.8rem', color: 'rgba(255,255,255,.60)', marginTop: 5, fontWeight: 600 }}>
-                  Founder & CEO · Fast Service Electro Mechanical Works LLC
+                 Chairman & Managing Director · Fast Service Electro Mechanical Works LLC
                 </div>
               </div>
             </div>
@@ -51,9 +51,11 @@ export function CeoNote() {
 
           {/* Note side */}
           <div className="fade-up delay-2">
-            <p className="t-eyebrow" style={{ marginBottom: 18 }}>From the CEO</p>
+          <p className="t-eyebrow" style={{ marginBottom: 18 }}>
+  Chairman's Message
+</p>
             <h2 className="t-display-sm" style={{ color: '#0d1b2a', marginBottom: 28 }}>
-              Built on trust, delivered with care.
+               Committed to Quality, Reliability & Excellence.
             </h2>
 
             <div style={{ position: 'relative', marginBottom: 28 }}>
@@ -78,10 +80,10 @@ export function CeoNote() {
                 background: 'linear-gradient(135deg, #1E4ED8, #3b82f6)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 color: '#fff', fontWeight: 900, fontSize: '1rem', flexShrink: 0
-              }}>MA</div>
+              }}>SM</div>
               <div>
-                <div style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: '1.1rem', color: '#0d1b2a', fontStyle: 'italic' }}>Mohammed Al Rashidi</div>
-                <div style={{ fontSize: '.78rem', color: '#94a3b8', marginTop: 3, fontWeight: 600 }}>Founder & CEO</div>
+                <div style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: '1.1rem', color: '#0d1b2a', fontStyle: 'italic' }}>Engr. Sulaiman Mohamed Al Sheezawy</div>
+                <div style={{ fontSize: '.78rem', color: '#94a3b8', marginTop: 3, fontWeight: 600 }}>Chairman & Managing Director</div>
               </div>
             </div>
           </div>
