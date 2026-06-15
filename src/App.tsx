@@ -112,13 +112,9 @@ function AppContent() {
     }, 100);
   };
 
-  if (isLoading || !siteConfig) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        Loading website data...
-      </div>
-    );
-  }
+ if (!siteConfig) {
+  return null;
+}
 
   const selected = selectedServiceId
     ? services.find((s) => s.id === selectedServiceId) || null

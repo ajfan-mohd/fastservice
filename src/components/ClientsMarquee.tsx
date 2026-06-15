@@ -11,9 +11,9 @@ function ClientCard({ name, logo }: { name: string; logo: string }) {
         background: '#fff',
         border: '1.5px solid #e8edf2',
         borderRadius: 14,
-        padding: '16px 28px',
-        minWidth: 180,
-        height: 80,
+        padding: '20px 32px',
+        minWidth: 220,
+        height: 100,
         flexShrink: 0,
         boxShadow: '0 2px 12px rgba(10,22,40,.05)',
         userSelect: 'none',
@@ -25,11 +25,11 @@ function ClientCard({ name, logo }: { name: string; logo: string }) {
         loading="lazy"
         decoding="async"
         style={{
-          maxHeight: 36,
-          maxWidth: 130,
+          maxHeight: 56,
+          maxWidth: 170,
           objectFit: 'contain',
           filter: 'grayscale(100%)',
-          opacity: 0.6,
+          opacity: 0.72,
           transition: 'filter .3s, opacity .3s',
         }}
         onMouseEnter={(e) => {
