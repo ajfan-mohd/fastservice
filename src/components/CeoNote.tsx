@@ -31,7 +31,7 @@ export function CeoNote() {
                   Engr. Sulaiman Mohamed Al Sheezawy
                 </div>
                 <div style={{ fontSize: '.8rem', color: 'rgba(255,255,255,.60)', marginTop: 5, fontWeight: 600 }}>
-                 Chairman & Managing Director · Fast Service Electro Mechanical Works LLC
+                 Chairman & Managing Director · Fast Service Contracting LLc
                 </div>
               </div>
             </div>

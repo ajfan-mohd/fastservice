@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Menu, X, Phone } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { SiteConfig } from '../types';
-import logo from '../assets/images/logo.png';
+import logo from '../assets/images/final-logo.png';
 
 export function Header({ siteConfig }: { siteConfig: SiteConfig }) {
   const [open, setOpen] = useState(false);
@@ -47,8 +47,8 @@ export function Header({ siteConfig }: { siteConfig: SiteConfig }) {
         >
           <img
             src={logo}
-            alt={siteConfig?.companyName || 'Fast Service'}
-            className="h-12 w-auto object-contain lg:h-14"
+            alt={siteConfig?.companyName || 'Fast Service Contracting LLc'}
+            className="h-14 w-auto object-contain lg:h-15"
           />
         </NavLink>
 

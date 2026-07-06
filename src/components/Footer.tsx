@@ -46,7 +46,7 @@ export function Footer({ siteConfig }: { siteConfig: SiteConfig }) {
       </div>
 
       <div className="mx-auto mt-8 max-w-7xl border-t border-white/10 px-4 pt-6 text-sm text-slate-500 sm:px-6 lg:px-8">
-        © {new Date().getFullYear()} Fast Service Electro Mechanical Works LLC.
+        © {new Date().getFullYear()} Fast Service Contracting LLc.
         All rights reserved.
       </div>
     </footer>

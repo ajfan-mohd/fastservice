@@ -23,7 +23,7 @@ export function AboutPage({
             </h1>
 
             <p className="mt-8 max-w-xl text-lg leading-8 text-white/70">
-              Fast Service Electro Mechanical Works LLC helps property owners,
+              Fast Service Contracting LLc helps property owners,
               tenants, offices and building managers handle renovation,
               maintenance and MEP work with less stress.
             </p>
