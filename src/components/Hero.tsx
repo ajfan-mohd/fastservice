@@ -44,14 +44,14 @@ export function Hero({
               onClick={onBookNow}
               className="rounded-full bg-[#1E4ED8] px-7 py-3.5 text-sm font-extrabold uppercase tracking-wide text-white shadow-lg shadow-blue-500/20 hover:bg-[#3B82F6]"
             >
-              Get a Quote
+              Get a Free Quote
             </button>
 
             <button
               onClick={onExploreServices}
               className="rounded-full border border-white/18 bg-white/10 px-7 py-3.5 text-sm font-extrabold uppercase tracking-wide text-white backdrop-blur hover:bg-white/16"
             >
-              View Services
+              View Our Services
             </button>
           </div>
         </div>

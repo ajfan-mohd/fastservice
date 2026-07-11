@@ -38,24 +38,21 @@ export function About({
         <div>
           <div className="mb-5 flex items-center gap-4">
             <span className="h-px w-8 bg-[#1E4ED8]" />
-            <span className="text-xs font-black uppercase tracking-[0.25em] text-[#1E4ED8]">About Us</span>
+            <span className="text-xs font-black uppercase tracking-[0.25em] text-[#1E4ED8]">About FastService Contracting</span>
           </div>
 
           <h2 className="text-[34px] font-black uppercase leading-[1] tracking-[-0.04em] text-[#07111f] sm:text-[44px] lg:text-[52px]">
-            UAE's leading <span className="text-[#1E4ED8]">electro mechanical</span> company
+            UAE's leading <span className="text-[#1E4ED8]">Contracting</span> company
           </h2>
 
           <p className="mt-6 max-w-3xl text-base leading-8 text-slate-700">
-            Founded in 2005 by Engr. Sulaiman Mohamed Al Sheezawy, Fast Service
-            Electro Mechanical Works LLC has grown into one of Dubai's most
-            trusted names in MEP contracting, villa renovation, and building
-            maintenance.
+            FastService Contracting is a trusted contracting company in the UAE, offering complete solutions for civil works, MEP services, building maintenance, renovation, and interior fit-out projects.
           </p>
 
           <p className="mt-4 max-w-3xl text-base leading-8 text-slate-700">
-            For over 25 years, we have been the go-to partner for homeowners,
-            real estate developers, and businesses — delivering projects on
-            time, on budget, and beyond expectations.
+            We work with homeowners, businesses, consultants, developers, and property owners to deliver reliable, cost-effective, and high-quality contracting services. Our team focuses on safety, quality, clear communication, and on-time completion for every project.
+
+Whether it is a small maintenance job or a complete construction project, FastService Contracting is committed to delivering work that meets professional standards and client expectations.
           </p>
 
           <div className="mt-7 grid gap-3 sm:grid-cols-2">
