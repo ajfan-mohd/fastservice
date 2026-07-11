@@ -120,12 +120,12 @@ export function AboutPage({
               [
                 'Mission',
                 'Deliver Reliable Solutions',
-                'To provide dependable renovation, maintenance and MEP services through quality workmanship, clear communication and timely project delivery.',
+                'To provide reliable, high-quality, and affordable contracting services that help clients complete their projects with confidence.',
               ],
               [
                 'Vision',
                 "Become UAE's Trusted Partner",
-                "To be recognised as one of the UAE's most trusted service companies for residential, commercial and industrial projects.",
+                "To become one of the trusted contracting companies in the UAE, known for quality work, timely delivery, and professional service.",
               ],
               [
                 'Values',

@@ -2,10 +2,11 @@ import { ClipboardCheck, FileText, HardHat, Handshake, Sparkles } from 'lucide-r
 import { SectionHeader } from './ui/SectionHeader';
 
 const steps = [
-  ['01', 'Site Visit', 'We check the location and understand the requirement clearly.', ClipboardCheck],
-  ['02', 'Quotation', 'You get a simple scope, timeline and price before work starts.', FileText],
-  ['03', 'Execution', 'Our team completes the work with clean site management.', HardHat],
-  ['04', 'Handover', 'Final checking, finishing and clear project handover.', Handshake],
+  ['01', 'Site Inspection', 'We visit the site, understand the project requirements, and review the scope of work.', ClipboardCheck],
+  ['02', 'Quotation & Planning', 'We provide a clear quotation and prepare a practical work plan based on the project needs.', FileText],
+  ['03', 'Project Execution', 'Our team starts the work with proper coordination, materials, manpower, and quality control', HardHat],
+  ['04', 'Quality Check', 'We inspect the completed work to make sure it meets the required standards.', Handshake],
+  ['05', 'Final Handover', 'We ensure a smooth handover with all documentation and training provided.', Handshake],
 ];
 
 export function ProcessSection() {
