@@ -97,8 +97,11 @@ export async function addService(service: Omit<Service, 'id'>) {
   if (error) throw error;
 }
 
-export async function updateService(id: string, service: Partial<Service>) {
-  const { error } = await supabase
+export async function updateService(
+  id: string,
+  service: Partial<Service>
+) {
+  const { data, error } = await supabase
     .from('services')
     .update({
       title: service.title,
@@ -106,13 +109,23 @@ export async function updateService(id: string, service: Partial<Service>) {
       short_description: service.shortDescription,
       long_description: service.longDescription,
       price_info: service.priceInfo,
-      features: service.features,
+      features: service.features || [],
+      requirements: service.requirements || [],
       image_url: service.imageUrl,
+      images: service.images || [],
       icon_name: service.iconName,
     })
-    .eq('id', id);
+    .eq('id', id)
+    .select('id, images')
+    .single();
 
-  if (error) throw error;
+  if (error) {
+    console.error('Service update failed:', error);
+    alert(`Service update failed: ${error.message}`);
+    throw error;
+  }
+
+  console.log('Images saved successfully:', data.images);
 }
 
 export async function deleteService(id: string) {
