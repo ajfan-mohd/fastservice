@@ -54,7 +54,7 @@ export function Hero({
         className="hero-img absolute inset-0 h-full w-full object-cover"
       />
 
-      <div className="absolute inset-0 bg-gradient-to-r from-[#07111f]/55 via-[#07111f]/22 to-transparent" />
+     <div className="absolute inset-0 bg-gradient-to-r from-[#07111f]/55 via-[#07111f]/22 to-transparent" />
 
       <div className="relative z-10 flex min-h-[88vh] items-center px-5 pb-16 pt-24 sm:px-8 md:px-12 lg:px-20">
         <div className="max-w-2xl">
