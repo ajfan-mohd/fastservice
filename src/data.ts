@@ -9,10 +9,22 @@ const INITIAL_SITE_CONFIG: SiteConfig = {
   phone: '+971 XX XXX XXXX',
   email: 'info@fastserviceuae.com',
   address: 'Dubai, United Arab Emirates',
-  workingHours: 'Sunday - Saturday: 8:00 AM - 7:00 PM | Emergency support available',
-  instagramUrl: 'https://www.instagram.com/fast_service_uae?igsh=MWlnbm42N3U5YWJtaA==',
-  aboutText: 'Fast Service Contracting LLc provides reliable electro mechanical, renovation, fit-out, painting, flooring, joinery, landscaping and maintenance services across the UAE. Our team handles small repair jobs, villa upgrades, office works and complete project execution with clear communication and professional workmanship.',
-  visionText: 'To make building services simple, safe and reliable for homes, offices and commercial spaces in the UAE.'
+  workingHours:
+    'Sunday - Saturday: 8:00 AM - 7:00 PM | Emergency support available',
+  instagramUrl:
+    'https://www.instagram.com/fast_service_uae?igsh=MWlnbm42N3U5YWJtaA==',
+  aboutText:
+    'Fast Service Contracting LLc provides reliable electro mechanical, renovation, fit-out, painting, flooring, joinery, landscaping and maintenance services across the UAE. Our team handles small repair jobs, villa upgrades, office works and complete project execution with clear communication and professional workmanship.',
+  visionText:
+    'To make building services simple, safe and reliable for homes, offices and commercial spaces in the UAE.',
+
+  heroEyebrow: 'Trusted Contracting Services',
+  heroTitle:
+    'Reliable Contracting Solutions for Residential, Commercial & Industrial Projects',
+  heroSubtitle:
+    'Professional construction, maintenance, MEP, renovation and fit-out services across the UAE.',
+  heroImage: HERO_IMAGE,
+  whatsappNumber: '+971XXXXXXXXX',
 };
 
 const servicesBase = [

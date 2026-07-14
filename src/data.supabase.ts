@@ -16,7 +16,9 @@ const mapService = (s: any): Service => ({
   longDescription: s.long_description,
   priceInfo: s.price_info,
   features: s.features || [],
+  requirements: s.requirements || [],
   imageUrl: s.image_url,
+  images: s.images || [],
   iconName: s.icon_name,
 });
 
@@ -86,7 +88,9 @@ export async function addService(service: Omit<Service, 'id'>) {
     long_description: service.longDescription,
     price_info: service.priceInfo,
     features: service.features,
+    requirements: service.requirements || [],
     image_url: service.imageUrl,
+    images: service.images || [],
     icon_name: service.iconName,
   });
 
