@@ -22,7 +22,7 @@ export function Footer({ siteConfig }: { siteConfig: SiteConfig }) {
             <div>
               <div className="text-xl font-black">FAST SERVICE</div>
               <div className="text-xs text-slate-500">
-                Electro Mechanical Works LLC
+                Contracting LLC
               </div>
             </div>
           </div>
