@@ -59,7 +59,7 @@ export function HomePage({
         onBookService={onBookService}
       />
 
-      <GalleryGrid items={galleryItems.slice(0, 6)} />
+      {/* <GalleryGrid items={galleryItems.slice(0, 6)} /> */}
 
       <ProcessSection />
 

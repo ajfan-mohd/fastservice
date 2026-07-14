@@ -18,7 +18,7 @@ export function PageHero({
         height={900}
         loading="lazy"
         decoding="async"
-        className="absolute inset-0 h-full w-full object-cover opacity-45"
+        className="absolute inset-0 h-full w-full object-cover "
       />
 
       <div className="absolute inset-0 bg-gradient-to-r from-[#07111f] via-[#07111f]/78 to-[#07111f]/35" />

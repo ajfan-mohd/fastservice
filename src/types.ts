@@ -8,6 +8,8 @@ export interface Service {
   features: string[];
   imageUrl: string;
   iconName: string; // From lucide-react (e.g. 'Lightbulb', 'Wind', 'Cpu', 'Wrench', 'Zap')
+  images?: { url: string; caption: string }[];
+requirements?: string[];
 }
 
 export interface GalleryItem {
