@@ -36,6 +36,12 @@ import {
   Save,
   MessageSquareQuote,
   Building2,
+  Plus,
+  LogOut,
+  Phone,
+  Mail,
+  Sparkles,
+  X,
 } from 'lucide-react';
 
 interface AdminPanelProps {
@@ -81,7 +87,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const [serviceLongDesc, setServiceLongDesc] = useState('');
   const [servicePriceInfo, setServicePriceInfo] = useState('');
   const [serviceIcon, setServiceIcon] = useState('Zap');
-  const [serviceFeatures, setServiceFeatures] = useState('');
+ const [serviceFeatures, setServiceFeatures] = useState<
+  { title: string; description: string }[]
+>([{ title: '', description: '' }]);
   const [serviceRequirements, setServiceRequirements] = useState('');
 
   // Up to 4 gallery photos for the service detail page, each with a caption.
@@ -126,7 +134,18 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     setServiceLongDesc(service.longDescription);
     setServicePriceInfo(service.priceInfo);
     setServiceIcon(service.iconName);
-    setServiceFeatures(service.features.join('\n'));
+    setServiceFeatures(
+  service.features?.length
+    ? service.features.map((feature) => {
+        const [title, ...descriptionParts] = feature.split('|');
+
+        return {
+          title: title.trim(),
+          description: descriptionParts.join('|').trim(),
+        };
+      })
+    : [{ title: '', description: '' }]
+);
     setServiceRequirements((service.requirements || []).join('\n'));
     setServiceImages(
       service.images?.length
@@ -143,7 +162,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     setServiceShortDesc('');
     setServiceLongDesc('');
     setServicePriceInfo('');
-    setServiceFeatures('');
+   setServiceFeatures([{ title: '', description: '' }]);
     setServiceRequirements('');
     setServiceImages([]);
   };
@@ -151,10 +170,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const handleSaveService = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const parsedFeatures = serviceFeatures
-      .split('\n')
-      .map((f) => f.trim())
-      .filter(Boolean);
+   const parsedFeatures = serviceFeatures
+  .filter((feature) => feature.title.trim())
+  .map((feature) => {
+    const title = feature.title.trim();
+    const description = feature.description.trim();
+
+    return description ? `${title}|${description}` : title;
+  });
 
     const parsedRequirements = serviceRequirements
       .split('\n')
@@ -204,7 +227,34 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const handleServiceImageRemove = (index: number) => {
     setServiceImages((prev) => prev.filter((_, i) => i !== index));
   };
+const handleFeatureChange = (
+  index: number,
+  field: 'title' | 'description',
+  value: string
+) => {
+  setServiceFeatures((prev) =>
+    prev.map((feature, i) =>
+      i === index ? { ...feature, [field]: value } : feature
+    )
+  );
+};
 
+const handleAddFeature = () => {
+  setServiceFeatures((prev) => [
+    ...prev,
+    { title: '', description: '' },
+  ]);
+};
+
+const handleRemoveFeature = (index: number) => {
+  setServiceFeatures((prev) => {
+    const updated = prev.filter((_, i) => i !== index);
+
+    return updated.length
+      ? updated
+      : [{ title: '', description: '' }];
+  });
+};
   const handleAddGalleryItem = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -312,85 +362,117 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     ['config', 'Site Settings', Settings, null],
   ] as const;
 
-  return (
-    <div className="min-h-screen bg-slate-100 py-8">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 border-b-4 border-blue-600 bg-slate-900 p-6 text-white md:p-8">
-          <span className="flex items-center text-[10px] font-bold uppercase tracking-widest text-blue-400">
-            <FolderLock size={12} className="mr-2" />
-            Admin Control Panel
-          </span>
+  // Purely presentational helper — status → accent color, no logic change.
+  const statusStyles: Record<string, string> = {
+    pending: 'bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-200',
+    reviewed: 'bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-200',
+    completed: 'bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-200',
+  };
 
-          <h1 className="mt-2 text-2xl font-black uppercase">
-            Fast Service Admin Dashboard
-          </h1>
+  const inputClass =
+    'w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 shadow-sm outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20';
+
+  return (
+    <div className="min-h-screen bg-slate-100 pt-20 sm:pt-24">
+      {/* Top bar */}
+      <div className="border-b border-slate-800 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-6 sm:px-6 lg:px-8">
+          <div>
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-amber-400">
+              <FolderLock size={12} />
+              Admin Control Panel
+            </span>
+            <h1 className="mt-2 text-2xl font-black uppercase tracking-tight text-white">
+              Fast Service Dashboard
+            </h1>
+            <p className="mt-1 text-xs text-slate-400">
+              Manage services, gallery, bookings, testimonials, client logos and website settings.
+            </p>
+          </div>
+
           <button
             onClick={() => {
               localStorage.removeItem('admin_logged_in');
               window.location.href = '/admin';
             }}
-            className="mt-4 bg-red-600 px-4 py-2 text-sm font-bold text-white hover:bg-red-700"
+            className="inline-flex items-center gap-2 rounded-lg bg-red-600/90 px-4 py-2.5 text-xs font-bold uppercase tracking-wide text-white shadow-sm transition hover:bg-red-600"
           >
+            <LogOut size={14} />
             Logout
           </button>
-          <p className="mt-1 text-xs text-slate-400">
-            Manage services, gallery, bookings, testimonials, client logos and website settings.
-          </p>
         </div>
+      </div>
 
-        <div className="grid gap-8 lg:grid-cols-12">
-          <aside className="space-y-2 border border-slate-200 bg-white p-4 lg:col-span-3">
-            {tabs.map(([key, label, Icon, count]) => (
-              <button
-                key={key}
-                onClick={() => setActiveTab(key)}
-                className={`flex w-full items-center justify-between px-4 py-3 text-left text-xs font-bold uppercase tracking-wider ${
-                  activeTab === key
-                    ? 'bg-slate-900 text-white'
-                    : 'text-slate-600 hover:bg-slate-100'
-                }`}
-              >
-                <span className="flex items-center gap-2">
-                  <Icon size={14} />
-                  {label}
-                </span>
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="grid gap-6 lg:grid-cols-12">
+          {/* Sidebar */}
+          <aside className="h-fit space-y-1 rounded-xl border border-slate-200 bg-white p-3 shadow-sm lg:sticky lg:top-6 lg:col-span-3">
+            {tabs.map(([key, label, Icon, count]) => {
+              const isActive = activeTab === key;
+              return (
+                <button
+                  key={key}
+                  onClick={() => setActiveTab(key)}
+                  className={`group flex w-full items-center justify-between rounded-lg border-l-4 px-4 py-3 text-left text-xs font-bold uppercase tracking-wider transition ${
+                    isActive
+                      ? 'border-amber-500 bg-slate-900 text-white shadow-sm'
+                      : 'border-transparent text-slate-500 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-800'
+                  }`}
+                >
+                  <span className="flex items-center gap-2.5">
+                    <Icon size={15} className={isActive ? 'text-amber-400' : 'text-slate-400 group-hover:text-slate-500'} />
+                    {label}
+                  </span>
 
-                {count !== null && <span>{count}</span>}
-              </button>
-            ))}
+                  {count !== null && (
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-[10px] ${
+                        isActive ? 'bg-white/15 text-white' : 'bg-slate-100 text-slate-500'
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </aside>
 
-          <main className="min-h-[500px] border border-slate-200 bg-white p-6 md:p-8 lg:col-span-9">
+          {/* Main content */}
+          <main className="min-h-[500px] rounded-xl border border-slate-200 bg-white p-6 shadow-sm md:p-8 lg:col-span-9">
             {activeTab === 'bookings' && (
               <div className="space-y-6">
-                <h2 className="text-xl font-black uppercase">Client Inquiries</h2>
+                <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                  <h2 className="text-xl font-black uppercase tracking-tight text-slate-900">Client Inquiries</h2>
+                  <span className="text-xs font-semibold text-slate-400">{bookings.length} total</span>
+                </div>
 
                 {bookings.length === 0 && (
-                  <div className="border border-dashed border-slate-300 py-14 text-center text-sm text-slate-400">
+                  <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 py-14 text-center text-sm text-slate-400">
                     No leads yet.
                   </div>
                 )}
 
                 {bookings.map((booking) => (
-                  <div key={booking.id} className="border p-5">
-                    <div className="flex flex-wrap justify-between gap-3 border-b pb-4">
+                  <div key={booking.id} className="overflow-hidden rounded-xl border border-slate-200 shadow-sm">
+                    <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-50 px-5 py-4">
                       <div>
-                        <h3 className="font-black uppercase">{booking.name}</h3>
+                        <h3 className="font-black uppercase tracking-tight text-slate-900">{booking.name}</h3>
                         <p className="text-xs font-bold text-blue-600">
                           {booking.serviceType}
                         </p>
                       </div>
 
-                      <span className="h-fit bg-slate-900 px-3 py-1 text-xs font-bold uppercase text-white">
+                      <span className={`h-fit rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${statusStyles[booking.status] || 'bg-slate-100 text-slate-600 ring-1 ring-inset ring-slate-200'}`}>
                         {booking.status}
                       </span>
                     </div>
 
-                    <div className="mt-4 grid gap-4 md:grid-cols-2">
-                      <div className="text-sm text-slate-600">
-                        <p><b>Phone:</b> {booking.phone}</p>
-                        <p><b>Email:</b> {booking.email}</p>
-                        <p className="mt-3 italic">"{booking.message}"</p>
+                    <div className="grid gap-5 p-5 md:grid-cols-2">
+                      <div className="space-y-1.5 text-sm text-slate-600">
+                        <p className="flex items-center gap-2"><Phone size={13} className="text-slate-400" /> {booking.phone}</p>
+                        <p className="flex items-center gap-2"><Mail size={13} className="text-slate-400" /> {booking.email}</p>
+                        <p className="mt-3 rounded-lg bg-slate-50 p-3 italic text-slate-500">"{booking.message}"</p>
                       </div>
 
                       <div>
@@ -404,14 +486,17 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                             })
                           }
                           placeholder="Admin notes"
-                          className="w-full border p-2 text-sm"
+                          className={inputClass}
                         />
 
                         <div className="mt-3 flex flex-wrap gap-2">
-                          <button onClick={() => handleUpdateBookingStatus(booking.id, 'pending')} className="border px-3 py-1 text-xs">Pending</button>
-                          <button onClick={() => handleUpdateBookingStatus(booking.id, 'reviewed')} className="border px-3 py-1 text-xs">Reviewed</button>
-                          <button onClick={() => handleUpdateBookingStatus(booking.id, 'completed')} className="border px-3 py-1 text-xs">Completed</button>
-                          <button onClick={() => handleDeleteBooking(booking.id)} className="bg-red-600 px-3 py-1 text-xs text-white">Delete</button>
+                          <button onClick={() => handleUpdateBookingStatus(booking.id, 'pending')} className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-600 transition hover:border-amber-400 hover:text-amber-700">Pending</button>
+                          <button onClick={() => handleUpdateBookingStatus(booking.id, 'reviewed')} className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-600 transition hover:border-blue-400 hover:text-blue-700">Reviewed</button>
+                          <button onClick={() => handleUpdateBookingStatus(booking.id, 'completed')} className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-600 transition hover:border-emerald-400 hover:text-emerald-700">Completed</button>
+                          <button onClick={() => handleDeleteBooking(booking.id)} className="ml-auto inline-flex items-center gap-1.5 rounded-lg bg-red-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-red-700">
+                            <Trash2 size={12} />
+                            Delete
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -422,44 +507,52 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
             {activeTab === 'services' && (
               <div className="space-y-8">
-                <h2 className="text-xl font-black uppercase">Services Manager</h2>
+                <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                  <h2 className="text-xl font-black uppercase tracking-tight text-slate-900">Services Manager</h2>
+                  <span className="text-xs font-semibold text-slate-400">{services.length} total</span>
+                </div>
 
-                <form onSubmit={handleSaveService} className="space-y-4 border-4 border-slate-900 p-6">
-                  <input required value={serviceTitle} onChange={(e) => setServiceTitle(e.target.value)} placeholder="Service title" className="w-full border p-2 text-sm" />
+                <form onSubmit={handleSaveService} className="space-y-5 rounded-xl border border-slate-200 bg-slate-50/60 p-6 shadow-sm">
+                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-amber-600">
+                    <Sparkles size={13} />
+                    {editingServiceId ? 'Editing service' : 'New service'}
+                  </div>
+
+                  <input required value={serviceTitle} onChange={(e) => setServiceTitle(e.target.value)} placeholder="Service title" className={inputClass} />
 
                   <div className="grid gap-4 md:grid-cols-3">
-                    <input value={serviceCategory} onChange={(e) => setServiceCategory(e.target.value)} placeholder="Category" className="border p-2 text-sm" />
+                    <input value={serviceCategory} onChange={(e) => setServiceCategory(e.target.value)} placeholder="Category" className={inputClass} />
 
-                    {/* <select value={serviceIcon} onChange={(e) => setServiceIcon(e.target.value)} className="border p-2 text-sm">
+                    {/* <select value={serviceIcon} onChange={(e) => setServiceIcon(e.target.value)} className={inputClass}>
                       {AVAILABLE_ICONS.map((icon) => (
                         <option key={icon.name} value={icon.name}>{icon.name}</option>
                       ))}
                     </select> */}
 
-                    <input value={servicePriceInfo} onChange={(e) => setServicePriceInfo(e.target.value)} placeholder="Price info" className="border p-2 text-sm" />
+                    <input value={servicePriceInfo} onChange={(e) => setServicePriceInfo(e.target.value)} placeholder="Price info" className={inputClass} />
                   </div>
 
-                  <input required value={serviceShortDesc} onChange={(e) => setServiceShortDesc(e.target.value)} placeholder="Short description" className="w-full border p-2 text-sm" />
+                  <input required value={serviceShortDesc} onChange={(e) => setServiceShortDesc(e.target.value)} placeholder="Short description" className={inputClass} />
 
-                  <textarea value={serviceLongDesc} onChange={(e) => setServiceLongDesc(e.target.value)} placeholder="Long description (shown on the service detail page)" className="w-full border p-2 text-sm" rows={4} />
+                  <textarea value={serviceLongDesc} onChange={(e) => setServiceLongDesc(e.target.value)} placeholder="Long description (shown on the service detail page)" className={inputClass} rows={4} />
 
                   {/* Photo gallery: up to 4 images, each with an optional caption */}
                   <div className="space-y-3">
-                    <label className="block text-xs font-bold uppercase text-slate-500">
+                    <label className="block text-xs font-bold uppercase tracking-wide text-slate-500">
                       Service Photos ({serviceImages.length}/4) — first photo is used as the cover image
                     </label>
 
                     <div className="grid gap-4 sm:grid-cols-2">
                       {serviceImages.map((img, index) => (
-                        <div key={index} className="space-y-2 border p-3">
+                        <div key={index} className="space-y-2 rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
                           <div className="relative">
                             <img
                               src={img.url}
                               alt={img.caption || 'Service photo'}
-                              className="h-32 w-full rounded-lg border object-cover"
+                              className="h-32 w-full rounded-lg border border-slate-200 object-cover"
                             />
                             {index === 0 && (
-                              <span className="absolute left-2 top-2 bg-blue-600 px-2 py-0.5 text-[10px] font-bold uppercase text-white">
+                              <span className="absolute left-2 top-2 rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold uppercase text-white shadow-sm">
                                 Cover
                               </span>
                             )}
@@ -468,20 +561,21 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                             value={img.caption}
                             onChange={(e) => handleServiceImageCaptionChange(index, e.target.value)}
                             placeholder="Caption for this photo"
-                            className="w-full border p-2 text-xs"
+                            className={`${inputClass} text-xs`}
                           />
                           <button
                             type="button"
                             onClick={() => handleServiceImageRemove(index)}
-                            className="w-full bg-red-600 py-1 text-xs font-bold text-white"
+                            className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-red-600 py-1.5 text-xs font-bold text-white transition hover:bg-red-700"
                           >
+                            <X size={12} />
                             Remove Photo
                           </button>
                         </div>
                       ))}
 
                       {serviceImages.length < 4 && (
-                        <div className="flex flex-col items-center justify-center gap-2 border border-dashed border-slate-300 p-4 text-center">
+                        <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-slate-300 bg-white p-4 text-center">
                           <ImageIcon size={20} className="text-slate-300" />
                           <input
                             type="file"
@@ -502,17 +596,77 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     </div>
                   </div>
 
-                  <textarea value={serviceFeatures} onChange={(e) => setServiceFeatures(e.target.value)} placeholder="Features, one per line" className="w-full border p-2 text-sm" />
+                <div className="space-y-4">
+  <div className="flex items-center justify-between">
+    <label className="block text-xs font-bold uppercase tracking-wide text-slate-500">
+      What's Included
+    </label>
 
-                  <textarea value={serviceRequirements} onChange={(e) => setServiceRequirements(e.target.value)} placeholder="What the customer needs to provide/have ready, one per line" className="w-full border p-2 text-sm" />
+    <button
+      type="button"
+      onClick={handleAddFeature}
+      className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-slate-800"
+    >
+      <Plus size={13} />
+      Add Feature
+    </button>
+  </div>
 
-                  <div className="flex gap-2">
-                    <button type="submit" className="bg-blue-600 px-5 py-2 text-sm font-bold text-white">
+  <div className="space-y-4">
+    {serviceFeatures.map((feature, index) => (
+      <div
+        key={index}
+        className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
+      >
+        <div className="mb-3 flex items-center justify-between">
+          <p className="text-xs font-black uppercase tracking-wide text-slate-400">
+            Feature {index + 1}
+          </p>
+
+          <button
+            type="button"
+            onClick={() => handleRemoveFeature(index)}
+            className="text-xs font-bold text-red-600 hover:text-red-700"
+          >
+            Remove
+          </button>
+        </div>
+
+        <div className="space-y-3">
+          <input
+            value={feature.title}
+            onChange={(e) =>
+              handleFeatureChange(index, 'title', e.target.value)
+            }
+            placeholder="Feature title"
+            className={inputClass}
+          />
+
+          <textarea
+            value={feature.description}
+            onChange={(e) =>
+              handleFeatureChange(index, 'description', e.target.value)
+            }
+            placeholder="Short description"
+            rows={3}
+            className={inputClass}
+          />
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+                  <textarea value={serviceRequirements} onChange={(e) => setServiceRequirements(e.target.value)} placeholder="What the customer needs to provide/have ready, one per line" className={inputClass} />
+
+                  <div className="flex gap-2 pt-1">
+                    <button type="submit" className="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-amber-600">
+                      <Save size={14} />
                       {editingServiceId ? 'Save Service' : 'Add Service'}
                     </button>
 
                     {editingServiceId && (
-                      <button type="button" onClick={handleCancelServiceEdit} className="bg-slate-200 px-5 py-2 text-sm font-bold">
+                      <button type="button" onClick={handleCancelServiceEdit} className="rounded-lg bg-slate-200 px-5 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-300">
                         Cancel
                       </button>
                     )}
@@ -521,20 +675,20 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
                 <div className="grid gap-4 md:grid-cols-2">
                   {services.map((service) => (
-                    <div key={service.id} className="flex justify-between gap-4 border p-4">
+                    <div key={service.id} className="flex items-center justify-between gap-4 rounded-xl border border-slate-200 p-4 shadow-sm transition hover:border-slate-300 hover:shadow">
                       <div>
-                        <h3 className="text-sm font-black uppercase">{service.title}</h3>
-                        <p className="text-xs text-slate-500">{service.category}</p>
+                        <h3 className="text-sm font-black uppercase tracking-tight text-slate-900">{service.title}</h3>
+                        <p className="text-xs font-semibold text-blue-600">{service.category}</p>
                         <p className="mt-1 text-[10px] text-slate-400">
                           {service.images?.length || (service.imageUrl ? 1 : 0)} photo(s)
                         </p>
                       </div>
 
                       <div className="flex gap-2">
-                        <button onClick={() => handleStartEditService(service)} className="border p-2">
+                        <button onClick={() => handleStartEditService(service)} className="rounded-lg border border-slate-200 p-2 text-slate-500 transition hover:border-amber-300 hover:text-amber-600">
                           <Edit3 size={14} />
                         </button>
-                        <button onClick={() => handleDeleteService(service.id)} className="border p-2 text-red-600">
+                        <button onClick={() => handleDeleteService(service.id)} className="rounded-lg border border-slate-200 p-2 text-red-500 transition hover:border-red-300 hover:bg-red-50">
                           <Trash2 size={14} />
                         </button>
                       </div>
@@ -546,11 +700,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
             {activeTab === 'gallery' && (
               <div className="space-y-8">
-                <h2 className="text-xl font-black uppercase">Gallery Manager</h2>
+                <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                  <h2 className="text-xl font-black uppercase tracking-tight text-slate-900">Gallery Manager</h2>
+                  <span className="text-xs font-semibold text-slate-400">{galleryItems.length} total</span>
+                </div>
 
-                <form onSubmit={handleAddGalleryItem} className="space-y-4 border-4 border-slate-900 p-6">
-                  <input required value={gTitle} onChange={(e) => setGTitle(e.target.value)} placeholder="Image title" className="w-full border p-2 text-sm" />
-                  <input value={gCategory} onChange={(e) => setGCategory(e.target.value)} placeholder="Category" className="w-full border p-2 text-sm" />
+                <form onSubmit={handleAddGalleryItem} className="space-y-4 rounded-xl border border-slate-200 bg-slate-50/60 p-6 shadow-sm">
+                  <input required value={gTitle} onChange={(e) => setGTitle(e.target.value)} placeholder="Image title" className={inputClass} />
+                  <input value={gCategory} onChange={(e) => setGCategory(e.target.value)} placeholder="Category" className={inputClass} />
                   <input
                     type="file"
                     accept="image/*"
@@ -561,31 +718,35 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       const url = await uploadWebsiteImage(file, 'gallery');
                       setGImage(url);
                     }}
-                    className="w-full border p-2 text-sm"
+                    className="w-full rounded-lg border border-dashed border-slate-300 bg-white p-2 text-sm"
                   />
 
                   {gImage && (
                     <img
                       src={gImage}
                       alt="Gallery preview"
-                      className="h-32 w-full object-cover rounded-lg border"
+                      className="h-32 w-full rounded-lg border border-slate-200 object-cover"
                     />
                   )}
-                  <input value={gDesc} onChange={(e) => setGDesc(e.target.value)} placeholder="Description" className="w-full border p-2 text-sm" />
+                  <input value={gDesc} onChange={(e) => setGDesc(e.target.value)} placeholder="Description" className={inputClass} />
 
-                  <button type="submit" className="bg-blue-600 px-5 py-2 text-sm font-bold text-white">
+                  <button type="submit" className="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-amber-600">
+                    <Plus size={14} />
                     Add Gallery Image
                   </button>
                 </form>
 
                 <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
                   {galleryItems.map((item) => (
-                    <div key={item.id} className="border p-3">
+                    <div key={item.id} className="overflow-hidden rounded-xl border border-slate-200 shadow-sm transition hover:shadow">
                       <img src={item.imageUrl} alt={item.title} className="h-28 w-full object-cover" />
-                      <p className="mt-2 text-xs font-bold">{item.title}</p>
-                      <button onClick={() => handleDeleteGalleryItem(item.id)} className="mt-2 w-full bg-red-600 py-1 text-xs text-white">
-                        Delete
-                      </button>
+                      <div className="p-3">
+                        <p className="text-xs font-bold text-slate-800">{item.title}</p>
+                        <button onClick={() => handleDeleteGalleryItem(item.id)} className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg bg-red-600 py-1.5 text-xs font-bold text-white transition hover:bg-red-700">
+                          <Trash2 size={12} />
+                          Delete
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -594,10 +755,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
             {activeTab === 'clients' && (
               <div className="space-y-8">
-                <h2 className="text-xl font-black uppercase">Client Logos</h2>
+                <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                  <h2 className="text-xl font-black uppercase tracking-tight text-slate-900">Client Logos</h2>
+                  <span className="text-xs font-semibold text-slate-400">{clients.length} total</span>
+                </div>
 
-                <form onSubmit={handleAddClient} className="space-y-4 border-4 border-slate-900 p-6">
-                  <input required value={clientName} onChange={(e) => setClientName(e.target.value)} placeholder="Client name" className="w-full border p-2 text-sm" />
+                <form onSubmit={handleAddClient} className="space-y-4 rounded-xl border border-slate-200 bg-slate-50/60 p-6 shadow-sm">
+                  <input required value={clientName} onChange={(e) => setClientName(e.target.value)} placeholder="Client name" className={inputClass} />
                   <input
                     type="file"
                     accept="image/*"
@@ -608,7 +772,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       const url = await uploadWebsiteImage(file, 'clients');
                       setClientLogo(url);
                     }}
-                    className="w-full border p-2 text-sm"
+                    className="w-full rounded-lg border border-dashed border-slate-300 bg-white p-2 text-sm"
                   />
 
                   {clientLogo && (
@@ -619,14 +783,15 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     />
                   )}
 
-                  <button type="submit" className="bg-blue-600 px-5 py-2 text-sm font-bold text-white">
+                  <button type="submit" className="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-amber-600">
+                    <Plus size={14} />
                     Add Client Logo
                   </button>
                 </form>
 
                 <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
                   {clients.map((client) => (
-                    <div key={client.id} className="border p-4 text-center">
+                    <div key={client.id} className="rounded-xl border border-slate-200 p-4 text-center shadow-sm transition hover:shadow">
                       <img
                         src={client.logo}
                         alt={client.name}
@@ -635,8 +800,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                           e.currentTarget.style.display = 'none';
                         }}
                       />
-                      <p className="mt-3 text-sm font-bold">{client.name}</p>
-                      <button onClick={() => handleDeleteClient(client.id)} className="mt-3 w-full bg-red-600 py-1 text-xs text-white">
+                      <p className="mt-3 text-sm font-bold text-slate-800">{client.name}</p>
+                      <button onClick={() => handleDeleteClient(client.id)} className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-red-600 py-1.5 text-xs font-bold text-white transition hover:bg-red-700">
+                        <Trash2 size={12} />
                         Delete
                       </button>
                     </div>
@@ -647,33 +813,38 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
             {activeTab === 'testimonials' && (
               <div className="space-y-8">
-                <h2 className="text-xl font-black uppercase">Testimonials Manager</h2>
+                <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                  <h2 className="text-xl font-black uppercase tracking-tight text-slate-900">Testimonials Manager</h2>
+                  <span className="text-xs font-semibold text-slate-400">{testimonials.length} total</span>
+                </div>
 
-                <form onSubmit={handleAddTestimonial} className="space-y-4 border-4 border-slate-900 p-6">
-                  <input required value={tAuthor} onChange={(e) => setTAuthor(e.target.value)} placeholder="Author" className="w-full border p-2 text-sm" />
-                  <input value={tDesignation} onChange={(e) => setTDesignation(e.target.value)} placeholder="Designation" className="w-full border p-2 text-sm" />
-                  <input value={tCompany} onChange={(e) => setTCompany(e.target.value)} placeholder="Company" className="w-full border p-2 text-sm" />
-                  <input value={tCategory} onChange={(e) => setTCategory(e.target.value)} placeholder="Service category" className="w-full border p-2 text-sm" />
+                <form onSubmit={handleAddTestimonial} className="space-y-4 rounded-xl border border-slate-200 bg-slate-50/60 p-6 shadow-sm">
+                  <input required value={tAuthor} onChange={(e) => setTAuthor(e.target.value)} placeholder="Author" className={inputClass} />
+                  <input value={tDesignation} onChange={(e) => setTDesignation(e.target.value)} placeholder="Designation" className={inputClass} />
+                  <input value={tCompany} onChange={(e) => setTCompany(e.target.value)} placeholder="Company" className={inputClass} />
+                  <input value={tCategory} onChange={(e) => setTCategory(e.target.value)} placeholder="Service category" className={inputClass} />
 
-                  <select value={tRating} onChange={(e) => setTRating(Number(e.target.value))} className="w-full border p-2 text-sm">
+                  <select value={tRating} onChange={(e) => setTRating(Number(e.target.value))} className={inputClass}>
                     <option value={5}>5 Stars</option>
                     <option value={4}>4 Stars</option>
                     <option value={3}>3 Stars</option>
                   </select>
 
-                  <textarea required value={tComment} onChange={(e) => setTComment(e.target.value)} placeholder="Comment" className="w-full border p-2 text-sm" />
+                  <textarea required value={tComment} onChange={(e) => setTComment(e.target.value)} placeholder="Comment" className={inputClass} />
 
-                  <button type="submit" className="bg-blue-600 px-5 py-2 text-sm font-bold text-white">
+                  <button type="submit" className="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-amber-600">
+                    <Plus size={14} />
                     Add Testimonial
                   </button>
                 </form>
 
                 <div className="grid gap-4 md:grid-cols-2">
                   {testimonials.map((item) => (
-                    <div key={item.id} className="border p-4">
-                      <p className="text-sm italic">"{item.comment}"</p>
-                      <p className="mt-2 text-xs font-bold">— {item.author}</p>
-                      <button onClick={() => handleDeleteTestimonial(item.id)} className="mt-3 bg-red-600 px-3 py-1 text-xs text-white">
+                    <div key={item.id} className="rounded-xl border border-slate-200 p-4 shadow-sm transition hover:shadow">
+                      <p className="text-sm italic text-slate-600">"{item.comment}"</p>
+                      <p className="mt-2 text-xs font-bold text-slate-800">— {item.author}</p>
+                      <button onClick={() => handleDeleteTestimonial(item.id)} className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-red-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-red-700">
+                        <Trash2 size={12} />
                         Delete
                       </button>
                     </div>
@@ -684,25 +855,27 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
             {activeTab === 'config' && (
               <div className="space-y-8">
-                <h2 className="text-xl font-black uppercase">Site Settings</h2>
+                <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                  <h2 className="text-xl font-black uppercase tracking-tight text-slate-900">Site Settings</h2>
+                </div>
 
-                <div className="space-y-4 border-4 border-slate-900 p-6">
-                  <input value={cfgTagline} onChange={(e) => setCfgTagline(e.target.value)} placeholder="Tagline" className="w-full border p-2 text-sm" />
-                  <input value={cfgPhone} onChange={(e) => setCfgPhone(e.target.value)} placeholder="Phone" className="w-full border p-2 text-sm" />
-                  <input value={cfgEmail} onChange={(e) => setCfgEmail(e.target.value)} placeholder="Email" className="w-full border p-2 text-sm" />
-                  <input value={cfgAddress} onChange={(e) => setCfgAddress(e.target.value)} placeholder="Address" className="w-full border p-2 text-sm" />
-                  <input value={cfgHours} onChange={(e) => setCfgHours(e.target.value)} placeholder="Working hours" className="w-full border p-2 text-sm" />
-                  <input value={cfgInsta} onChange={(e) => setCfgInsta(e.target.value)} placeholder="Instagram URL" className="w-full border p-2 text-sm" />
-                  <input value={cfgWhatsapp} onChange={(e) => setCfgWhatsapp(e.target.value)} placeholder="WhatsApp Number" className="w-full border p-2 text-sm" />
+                <div className="space-y-4 rounded-xl border border-slate-200 bg-slate-50/60 p-6 shadow-sm">
+                  <input value={cfgTagline} onChange={(e) => setCfgTagline(e.target.value)} placeholder="Tagline" className={inputClass} />
+                  <input value={cfgPhone} onChange={(e) => setCfgPhone(e.target.value)} placeholder="Phone" className={inputClass} />
+                  <input value={cfgEmail} onChange={(e) => setCfgEmail(e.target.value)} placeholder="Email" className={inputClass} />
+                  <input value={cfgAddress} onChange={(e) => setCfgAddress(e.target.value)} placeholder="Address" className={inputClass} />
+                  <input value={cfgHours} onChange={(e) => setCfgHours(e.target.value)} placeholder="Working hours" className={inputClass} />
+                  <input value={cfgInsta} onChange={(e) => setCfgInsta(e.target.value)} placeholder="Instagram URL" className={inputClass} />
+                  <input value={cfgWhatsapp} onChange={(e) => setCfgWhatsapp(e.target.value)} placeholder="WhatsApp Number" className={inputClass} />
 
-                  <div className="border-t pt-5">
-                    <h3 className="mb-3 text-sm font-black uppercase">Hero Section</h3>
+                  <div className="rounded-lg border border-slate-200 bg-white p-5">
+                    <h3 className="mb-3 text-sm font-black uppercase tracking-wide text-slate-800">Hero Section</h3>
 
-                    <input value={cfgHeroEyebrow} onChange={(e) => setCfgHeroEyebrow(e.target.value)} placeholder="Hero Eyebrow" className="mb-3 w-full border p-2 text-sm" />
+                    <input value={cfgHeroEyebrow} onChange={(e) => setCfgHeroEyebrow(e.target.value)} placeholder="Hero Eyebrow" className={`${inputClass} mb-3`} />
 
-                    <input value={cfgHeroTitle} onChange={(e) => setCfgHeroTitle(e.target.value)} placeholder="Hero Title" className="mb-3 w-full border p-2 text-sm" />
+                    <input value={cfgHeroTitle} onChange={(e) => setCfgHeroTitle(e.target.value)} placeholder="Hero Title" className={`${inputClass} mb-3`} />
 
-                    <textarea value={cfgHeroSubtitle} onChange={(e) => setCfgHeroSubtitle(e.target.value)} placeholder="Hero Subtitle" className="mb-3 w-full border p-2 text-sm" />
+                    <textarea value={cfgHeroSubtitle} onChange={(e) => setCfgHeroSubtitle(e.target.value)} placeholder="Hero Subtitle" className={`${inputClass} mb-3`} />
 
                     <input
                       type="file"
@@ -714,21 +887,21 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         const url = await uploadWebsiteImage(file, 'hero');
                         setCfgHeroImage(url);
                       }}
-                      className="w-full border p-2 text-sm"
+                      className="w-full rounded-lg border border-dashed border-slate-300 p-2 text-sm"
                     />
 
                     {cfgHeroImage && (
                       <img
                         src={cfgHeroImage}
                         alt="Hero preview"
-                        className="mt-3 h-40 w-full rounded-lg border object-cover"
+                        className="mt-3 h-40 w-full rounded-lg border border-slate-200 object-cover"
                       />
                     )}
                   </div>
 
-                  <textarea value={cfgAbout} onChange={(e) => setCfgAbout(e.target.value)} placeholder="About text" className="w-full border p-2 text-sm" />
+                  <textarea value={cfgAbout} onChange={(e) => setCfgAbout(e.target.value)} placeholder="About text" className={inputClass} />
 
-                  <button onClick={handleSaveConfig} className="flex items-center gap-2 bg-slate-900 px-5 py-2 text-sm font-bold text-white">
+                  <button onClick={handleSaveConfig} className="flex items-center gap-2 rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-slate-800">
                     <Save size={14} />
                     Save Settings
                   </button>
