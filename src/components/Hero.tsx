@@ -10,7 +10,7 @@ export function Hero({
   onBookNow: () => void;
 }) {
   return (
-    <section className="relative min-h-[88vh] overflow-hidden bg-[#07111f]">
+    <section className="relative min-h-[82vh] overflow-hidden bg-[#07111f]">
       <style>{`
         @keyframes heroFadeUp {
           from {
@@ -31,7 +31,7 @@ export function Hero({
           }
         }
         .hero-img {
-          animation: heroZoomIn 6s ease-out forwards;
+          animation: heroZoomIn 7s ease-out forwards;
         }
         .hero-fade {
           opacity: 0;
@@ -54,9 +54,14 @@ export function Hero({
         className="hero-img absolute inset-0 h-full w-full object-cover"
       />
 
-     <div className="absolute inset-0 bg-gradient-to-r from-[#07111f]/55 via-[#07111f]/22 to-transparent" />
+      {/* Left-to-right blend for text readability */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#07111f]/62 via-[#07111f]/28 to-transparent" />
+      {/* Soft top fade so it meets the header cleanly */}
+      <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#07111f]/40 to-transparent" />
+      {/* Soft bottom fade so it flows into the next section instead of a hard cut */}
+      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#07111f]/70 to-transparent" />
 
-      <div className="relative z-10 flex min-h-[88vh] items-center px-5 pb-16 pt-24 sm:px-8 md:px-12 lg:px-20">
+      <div className="relative z-10 flex min-h-[82vh] items-center px-5 pb-20 pt-24 sm:px-8 md:px-12 lg:px-20">
         <div className="max-w-2xl">
           <span className="hero-fade hero-fade-1 mb-5 inline-block text-xs font-extrabold uppercase tracking-[0.22em] text-[#93c5fd] sm:text-sm">
             {siteConfig.heroEyebrow}
