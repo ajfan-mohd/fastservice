@@ -44,7 +44,7 @@ export function CeoNote() {
               boxShadow: '0 8px 32px rgba(232,117,26,.35)',
               color: '#fff', textAlign: 'center'
             }}>
-              <div style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: '1.8rem', lineHeight: 1 }}>25+</div>
+              <div style={{ fontFamily: 'Fraunces, serif', fontWeight: 700, fontSize: '1.8rem', lineHeight: 1 }}>20+</div>
               <div style={{ fontSize: '.65rem', fontWeight: 700, opacity: .85, marginTop: 4, textTransform: 'uppercase', letterSpacing: '.06em' }}>Years</div>
             </div>
           </div>

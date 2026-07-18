@@ -199,7 +199,7 @@ export function ClientsMarquee({ clients }: { clients: ClientLogo[] }) {
         {[
           { num: '200+', label: 'Happy Clients' },
           { num: '500+', label: 'Projects Done' },
-          { num: '25+', label: 'Years Trusted' },
+          { num: '20+', label: 'Years Trusted' },
           { num: '100%', label: 'On-Time Rate' },
         ].map(({ num, label }) => (
           <div key={label} style={{ textAlign: 'center' }}>
