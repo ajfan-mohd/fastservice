@@ -227,6 +227,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const handleServiceImageRemove = (index: number) => {
     setServiceImages((prev) => prev.filter((_, i) => i !== index));
   };
+   const handleServiceImageSetCover = (index: number) => {
+    setServiceImages((prev) => {
+      if (index === 0) return prev;
+      const updated = [...prev];
+      const [selected] = updated.splice(index, 1);
+      return [selected, ...updated];
+    });
+  };
 const handleFeatureChange = (
   index: number,
   field: 'title' | 'description',
@@ -543,6 +551,7 @@ const handleRemoveFeature = (index: number) => {
                     </label>
 
                     <div className="grid gap-4 sm:grid-cols-2">
+                      
                       {serviceImages.map((img, index) => (
                         <div key={index} className="space-y-2 rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
                           <div className="relative">
@@ -557,12 +566,22 @@ const handleRemoveFeature = (index: number) => {
                               </span>
                             )}
                           </div>
+                          
                           <input
                             value={img.caption}
                             onChange={(e) => handleServiceImageCaptionChange(index, e.target.value)}
                             placeholder="Caption for this photo"
                             className={`${inputClass} text-xs`}
                           />
+                            {index !== 0 && (
+                            <button
+                              type="button"
+                              onClick={() => handleServiceImageSetCover(index)}
+                              className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-amber-400 py-1.5 text-xs font-bold text-amber-600 transition hover:bg-amber-50"
+                            >
+                              Set as Cover
+                            </button>
+                          )}
                           <button
                             type="button"
                             onClick={() => handleServiceImageRemove(index)}
