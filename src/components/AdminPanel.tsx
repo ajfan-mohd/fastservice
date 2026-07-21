@@ -7,7 +7,7 @@ import {
   Testimonial,
   ClientLogo,
 } from '../types';
-
+import { supabase } from '../lib/supabase';
 import {
   addService,
   updateService,
@@ -439,16 +439,16 @@ const handleRemoveFeature = (index: number) => {
             </p>
           </div>
 
-          <button
-            onClick={() => {
-              localStorage.removeItem('admin_logged_in');
-              window.location.href = '/admin';
-            }}
-            className="inline-flex items-center gap-2 rounded-lg bg-red-600/90 px-4 py-2.5 text-xs font-bold uppercase tracking-wide text-white shadow-sm transition hover:bg-red-600"
-          >
-            <LogOut size={14} />
-            Logout
-          </button>
+         <button
+  onClick={async () => {
+    await supabase.auth.signOut();
+    window.location.href = '/admin';
+  }}
+  className="inline-flex items-center gap-2 rounded-lg bg-red-600/90 px-4 py-2.5 text-xs font-bold uppercase tracking-wide text-white shadow-sm transition hover:bg-red-600"
+>
+  <LogOut size={14} />
+  Logout
+</button>
         </div>
       </div>
 

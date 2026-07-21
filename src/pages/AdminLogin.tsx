@@ -23,7 +23,6 @@ const submit = async (e: React.FormEvent) => {
     return;
   }
 
-  localStorage.setItem('admin_logged_in', 'true');
   onLogin();
 };
 

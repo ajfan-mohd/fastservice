@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import { Header } from './components/Header';
 import { AdminPanel } from './components/AdminPanel';
 import { Footer } from './components/Footer';
-
+import { supabase } from './lib/supabase';
 import { HomePage } from './pages/HomePage';
 import { AboutPage } from './pages/AboutPage';
 import { ServicesPage } from './pages/ServicesPage';
@@ -44,9 +44,21 @@ function AppContent() {
   const [siteConfig, setSiteConfig] = useState<SiteConfig | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(
-    localStorage.getItem('admin_logged_in') === 'true'
-  );
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+const [authChecked, setAuthChecked] = useState(false);
+
+useEffect(() => {
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    setIsAdminLoggedIn(!!session);
+    setAuthChecked(true);
+  });
+
+  const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+    setIsAdminLoggedIn(!!session);
+  });
+
+  return () => listener.subscription.unsubscribe();
+}, []);
 
   const syncData = async () => {
     try {
@@ -187,23 +199,23 @@ function AppContent() {
           />
 
           <Route
-            path="/admin"
-            element={
-              isAdminLoggedIn ? (
-                <AdminPanel
-                  services={services}
-                  galleryItems={galleryItems}
-                  bookings={bookings}
-                  siteConfig={siteConfig}
-                  testimonials={testimonials}
-                  clients={clients}
-                  onRefreshData={syncData}
-                />
-              ) : (
-                <AdminLogin onLogin={() => setIsAdminLoggedIn(true)} />
-              )
-            }
-          />
+  path="/admin"
+  element={
+    !authChecked ? null : isAdminLoggedIn ? (
+      <AdminPanel
+        services={services}
+        galleryItems={galleryItems}
+        bookings={bookings}
+        siteConfig={siteConfig}
+        testimonials={testimonials}
+        clients={clients}
+        onRefreshData={syncData}
+      />
+    ) : (
+      <AdminLogin onLogin={() => setIsAdminLoggedIn(true)} />
+    )
+  }
+/>
         </Routes>
       </main>
 
