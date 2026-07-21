@@ -36,7 +36,7 @@ export function Header({ siteConfig }: { siteConfig: SiteConfig }) {
           <img
             src={logo}
             alt={siteConfig?.companyName || 'Fast Service Contracting LLc'}
-            className="h-14 w-auto object-contain lg:h-16"
+            className="h-14 w-auto object-contain lg:h-18"
           />
         </NavLink>
 

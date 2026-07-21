@@ -1,6 +1,6 @@
 import { ArrowRight, Check } from 'lucide-react';
 import { SiteConfig } from '../types';
-
+import image from '../assets/images/image.png'
 export function About({
   siteConfig,
   onNavigateToContact,
@@ -22,13 +22,13 @@ export function About({
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[0.95fr_1.05fr] lg:px-8">
         <div className="relative">
           <img
-            src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=1500&auto=format&fit=crop"
+            src={image}
             alt="Fast Service interior project"
             className="h-[360px] w-full rounded-xl object-cover sm:h-[430px] lg:h-[500px]"
           />
 
           <div className="absolute -bottom-5 right-5 rounded-lg bg-[#1E4ED8] px-7 py-6 text-center text-white shadow-xl sm:right-8">
-            <strong className="block text-4xl font-black leading-none">25</strong>
+            <strong className="block text-4xl font-black leading-none">20</strong>
             <span className="mt-2 block text-[11px] font-black uppercase leading-4 tracking-[0.18em]">
               Years of<br />Excellence
             </span>
