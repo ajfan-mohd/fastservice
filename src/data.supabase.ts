@@ -20,6 +20,7 @@ const mapService = (s: any): Service => ({
   imageUrl: s.image_url,
   images: s.images || [],
   iconName: s.icon_name,
+   position: s.position ?? 0, 
 });
 
 const mapGallery = (g: any): GalleryItem => ({
@@ -74,7 +75,7 @@ export async function getServices() {
   const { data, error } = await supabase
     .from('services')
     .select('*')
-    .order('created_at', { ascending: false });
+   .order('position', { ascending: true });  
 
   if (error) throw error;
   return data.map(mapService);
@@ -101,20 +102,23 @@ export async function updateService(
   id: string,
   service: Partial<Service>
 ) {
+  const updatePayload: Record<string, any> = {};
+
+  if (service.title !== undefined) updatePayload.title = service.title;
+  if (service.category !== undefined) updatePayload.category = service.category;
+  if (service.shortDescription !== undefined) updatePayload.short_description = service.shortDescription;
+  if (service.longDescription !== undefined) updatePayload.long_description = service.longDescription;
+  if (service.priceInfo !== undefined) updatePayload.price_info = service.priceInfo;
+  if (service.features !== undefined) updatePayload.features = service.features;
+  if (service.requirements !== undefined) updatePayload.requirements = service.requirements;
+  if (service.imageUrl !== undefined) updatePayload.image_url = service.imageUrl;
+  if (service.images !== undefined) updatePayload.images = service.images;
+  if (service.iconName !== undefined) updatePayload.icon_name = service.iconName;
+  if (service.position !== undefined) updatePayload.position = service.position;
+
   const { data, error } = await supabase
     .from('services')
-    .update({
-      title: service.title,
-      category: service.category,
-      short_description: service.shortDescription,
-      long_description: service.longDescription,
-      price_info: service.priceInfo,
-      features: service.features || [],
-      requirements: service.requirements || [],
-      image_url: service.imageUrl,
-      images: service.images || [],
-      icon_name: service.iconName,
-    })
+    .update(updatePayload)
     .eq('id', id)
     .select('id, images')
     .single();

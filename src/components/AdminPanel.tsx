@@ -41,6 +41,7 @@ import {
   Phone,
   Mail,
   Sparkles,
+   GripVertical,
   X,
 } from 'lucide-react';
 
@@ -227,6 +228,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const handleServiceImageRemove = (index: number) => {
     setServiceImages((prev) => prev.filter((_, i) => i !== index));
   };
+
+  
    const handleServiceImageSetCover = (index: number) => {
     setServiceImages((prev) => {
       if (index === 0) return prev;
@@ -235,6 +238,44 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       return [selected, ...updated];
     });
   };
+
+  const [orderedServices, setOrderedServices] = useState<Service[]>(services);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+
+  React.useEffect(() => {
+    setOrderedServices(services);
+  }, [services]);
+
+  const handleDragStart = (index: number) => {
+    setDraggedIndex(index);
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === index) return;
+
+    setOrderedServices((prev) => {
+      const updated = [...prev];
+      const [moved] = updated.splice(draggedIndex, 1);
+      updated.splice(index, 0, moved);
+      return updated;
+    });
+    setDraggedIndex(index);
+  };
+
+  const handleDragEnd = async () => {
+    setDraggedIndex(null);
+
+    await Promise.all(
+      orderedServices.map((service, index) =>
+        updateService(service.id, { position: index })
+      )
+    );
+
+    await onRefreshData();
+  };
+
+    
 const handleFeatureChange = (
   index: number,
   field: 'title' | 'description',
@@ -693,14 +734,31 @@ const handleRemoveFeature = (index: number) => {
                 </form>
 
                 <div className="grid gap-4 md:grid-cols-2">
-                  {services.map((service) => (
-                    <div key={service.id} className="flex items-center justify-between gap-4 rounded-xl border border-slate-200 p-4 shadow-sm transition hover:border-slate-300 hover:shadow">
-                      <div>
-                        <h3 className="text-sm font-black uppercase tracking-tight text-slate-900">{service.title}</h3>
-                        <p className="text-xs font-semibold text-blue-600">{service.category}</p>
-                        <p className="mt-1 text-[10px] text-slate-400">
-                          {service.images?.length || (service.imageUrl ? 1 : 0)} photo(s)
-                        </p>
+                  {orderedServices.map((service, index) => (
+                    <div
+                      key={service.id}
+                      draggable
+                      onDragStart={() => handleDragStart(index)}
+                      onDragOver={(e) => handleDragOver(e, index)}
+                      onDragEnd={handleDragEnd}
+                      className={`flex items-center justify-between gap-4 rounded-xl border border-slate-200 p-4 shadow-sm transition hover:border-slate-300 hover:shadow ${
+                        draggedIndex === index ? 'opacity-50' : ''
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="cursor-grab text-slate-300 hover:text-slate-500 active:cursor-grabbing">
+                          <GripVertical size={16} />
+                        </span>
+                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-slate-500">
+                          {index + 1}
+                        </span>
+                        <div>
+                          <h3 className="text-sm font-black uppercase tracking-tight text-slate-900">{service.title}</h3>
+                          <p className="text-xs font-semibold text-blue-600">{service.category}</p>
+                          <p className="mt-1 text-[10px] text-slate-400">
+                            {service.images?.length || (service.imageUrl ? 1 : 0)} photo(s)
+                          </p>
+                        </div>
                       </div>
 
                       <div className="flex gap-2">

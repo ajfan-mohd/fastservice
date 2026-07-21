@@ -10,6 +10,7 @@ export interface Service {
   iconName: string; // From lucide-react (e.g. 'Lightbulb', 'Wind', 'Cpu', 'Wrench', 'Zap')
   images?: { url: string; caption: string }[];
 requirements?: string[];
+ position?: number; 
 }
 
 export interface GalleryItem {
