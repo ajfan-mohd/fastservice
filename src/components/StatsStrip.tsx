@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { CheckCircle2 } from 'lucide-react';
 
 const stats = [
-  { value: 25, suffix: '+', label: 'Years Experience' },
+  { value: 20, suffix: '+', label: 'Years Experience' },
   { value: 500, suffix: '+', label: 'Projects Completed' },
   { value: 24, suffix: '/7', label: 'Support Available' },
   { value: 15, suffix: '+', label: 'Service Categories' },
